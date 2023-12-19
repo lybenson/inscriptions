@@ -1,3 +1,5 @@
+[中文](./README_ZH.md)
+
 # Run
 
 Install the **Code Runner** plugin for VSCode
