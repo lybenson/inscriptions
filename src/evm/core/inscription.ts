@@ -7,29 +7,61 @@ export type Fraction = {
   denominator: number
 }
 
-export const run = async (
-  account: Account,
-  chain: Chain,
-  rpc: string,
-  data: string | Hex,
-  booster: number = 1,
-  suspend: number = 0
-) => {
+interface RunConfig {
+  /**
+   * user account
+   */
+  account: Account
+  /**
+   * chain
+   */
+  chain: Chain
+  /**
+   * rpc url
+   */
+  rpc: string
+  /**
+   * inscription data: text or hex, start with 0x if use hex
+   */
+  data: string | Hex
+  /**
+   * run count, or zero, means infinite
+   */
+  runs?: number
+  /**
+   * gas price booster, should be greater than 1
+   */
+  booster?: Fraction
+  /**
+   * suspend time in milliseconds
+   */
+  suspend?: number
+}
+
+export const run = async ({
+  account,
+  chain,
+  rpc,
+  data,
+  runs = 0,
+  booster = {
+    numerator: 1,
+    denominator: 1
+  },
+  suspend = 0
+}: RunConfig) => {
   const { publicClient, walletClient } = createClient(account, rpc)
 
   let nonce = await publicClient.getTransactionCount({
     address: account.address
   })
   console.log(`init nonce = ${nonce}`)
+
   const withData: Hex = data.startsWith('0x') ? (data as Hex) : toHex(data)
+  console.log(`data: ${withData}`)
 
-  const boosterFraction: Fraction = {
-    numerator: 1,
-    denominator: 1
-  }
-  console.log(`booster = ${booster}`)
-
-  while (true) {
+  let times = 0
+  while (runs === 0 ? true : times < runs) {
     try {
       const gasPrice = await publicClient.getGasPrice()
 
@@ -37,18 +69,19 @@ export const run = async (
         to: account.address,
         chain,
         gasPrice:
-          (gasPrice * BigInt(boosterFraction.numerator)) /
-          BigInt(boosterFraction.denominator),
+          (gasPrice * BigInt(booster.numerator)) / BigInt(booster.denominator),
         nonce,
         data: withData
       })
-      console.log(`gasPrice = ${gasPrice}, nonce = ${nonce}, hash = ${hash}`)
+      console.log(`${times}: nonce = ${nonce}, hash = ${hash}`)
       nonce += 1
       if (suspend > 0) {
         await setTimeout(suspend)
       }
     } catch (error) {
       console.log(error)
+    } finally {
+      times += 1
     }
   }
 }
