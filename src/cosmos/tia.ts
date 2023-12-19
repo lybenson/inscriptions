@@ -1,3 +1,4 @@
+import 'dotenv/config'
 import { CreateClient } from './core/client'
 import { run } from './core/inscription'
 import { CreateWallet } from './core/wallet'
