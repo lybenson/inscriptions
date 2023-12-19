@@ -1,15 +1,15 @@
 import { CreateClient } from './core/client'
 import { run } from './core/inscription'
-import { CreateWalletUnion } from './core/wallet'
+import { CreateWallet } from './core/wallet'
 
 const main = async () => {
-  const walletUnion = await CreateWalletUnion('inj', 2)
+  const wallet = await CreateWallet('inj')
 
-  if (!walletUnion || !walletUnion.wallet) return
+  if (!wallet) return
 
-  const client = await CreateClient('https://...', walletUnion.wallet)
+  const client = await CreateClient('https://...', wallet)
 
-  const accounts = await walletUnion.wallet.getAccounts()
+  const accounts = await wallet.getAccounts()
 
   for (let i = 0; i < accounts.length; i++) {
     run({

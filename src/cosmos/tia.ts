@@ -1,17 +1,17 @@
 import { CreateClient } from './core/client'
 import { run } from './core/inscription'
-import { CreateWalletUnion } from './core/wallet'
+import { CreateWallet } from './core/wallet'
 
 const main = async () => {
-  const walletUnion = await CreateWalletUnion('celestia', 2)
+  const wallet = await CreateWallet('celestia')
 
-  if (!walletUnion || !walletUnion.wallet) return
+  if (!wallet) return
 
   const client = await CreateClient(
     'https://rpc-celestia-full.avril14th.org',
-    walletUnion.wallet
+    wallet
   )
-  const accounts = await walletUnion.wallet.getAccounts()
+  const accounts = await wallet.getAccounts()
 
   for (let i = 0; i < accounts.length; i++) {
     run({

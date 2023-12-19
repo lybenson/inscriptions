@@ -6,29 +6,23 @@ import { HdPath } from '@cosmjs/crypto'
 
 const mnemonic = process.env.MNEMONIC
 
-export interface WalletUnion {
-  wallet: DirectSecp256k1HdWallet | undefined
-  size: number
-}
-
-export const CreateWalletUnion = async (
-  prefix: string,
-  size: number
-): Promise<WalletUnion> => {
+export const CreateWallet = async (
+  prefix: string
+): Promise<DirectSecp256k1HdWallet | undefined> => {
   let wallet = undefined
+  const size = Number(process.env.MNEMONIC_ACCOUNT_SIZE || 1)
   if (mnemonic) {
     const hdPaths: HdPath[] = []
+
     for (let i = 0; i < size; i++) {
       hdPaths.push(makeCosmoshubPath(i))
     }
+
     wallet = await DirectSecp256k1HdWallet.fromMnemonic(mnemonic, {
       prefix,
       hdPaths: hdPaths
     })
   }
 
-  return {
-    wallet,
-    size
-  }
+  return wallet
 }
