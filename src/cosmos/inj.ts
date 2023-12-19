@@ -14,7 +14,7 @@ const main = async () => {
   for (let i = 0; i < accounts.length; i++) {
     run({
       client,
-      account: accounts[0],
+      account: accounts[i],
       denom: 'uinj',
       memo: 'data:,{"p":"injrc-20","op":"deploy","tick":"INJS","max":"1000000000","lim":"2000"}',
       coinAmount: 30000,
