@@ -5,6 +5,12 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
+  '@cosmjs/amino':
+    specifier: ^0.32.1
+    version: 0.32.1
+  '@cosmjs/crypto':
+    specifier: ^0.32.1
+    version: 0.32.1
   '@cosmjs/proto-signing':
     specifier: ^0.32.1
     version: 0.32.1

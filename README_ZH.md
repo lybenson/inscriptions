@@ -14,7 +14,7 @@ npm i
 ```
 # 助记词
 MNEMONIC=
-# 助记词生成的账号
+# 助记词生成的账号数量
 MNEMONIC_ACCOUNT_SIZE=
 
 # 私钥, 多私钥时用逗号隔开
